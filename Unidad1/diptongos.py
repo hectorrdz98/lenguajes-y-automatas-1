@@ -11,7 +11,7 @@ with open('parrafo.txt', encoding="utf-8") as file:
             vocalAntes = ''
             for char in word:
                 if char in vocales:
-                    if not vocalAntes == '':
+                    if not vocalAntes == '' and not vocalAntes == char:
                         print()
                         print('Palabra:', word)
                         print('Diptongo: {}{}'.format(vocalAntes, char))
