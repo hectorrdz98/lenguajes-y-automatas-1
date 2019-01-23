@@ -2,7 +2,6 @@
 
 #Lo hice en Python3.6
 
-
 frase = input("Ingrese la frase: ")
 vocales = ['a', 'e', 'i', 'o', 'u']
 vocalesEncontradas = {}
