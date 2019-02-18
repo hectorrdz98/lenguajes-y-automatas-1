@@ -5,9 +5,20 @@ import java.util.Scanner;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-/**
- *
- * @author Héctor Rodríguez
+/*
+
+Programa Diptongos
+Autor: Héctor Rodríguez
+
+Este programa permite obtener los
+diptongos existentes en un archivo
+de texto. Muestra en pantalla el diptongo,
+la palabra donde se encuentra y en que
+linea del archivo.
+
+Esta version en Java sólo reconoce
+vocales sin tilde o diéresis
+
  */
 public class Diptongos {
 
@@ -20,7 +31,9 @@ public class Diptongos {
         try {
             sc = new Scanner(file);
         } catch (FileNotFoundException ex) {
-            Logger.getLogger(Diptongos.class.getName()).log(Level.SEVERE, null, ex);
+            System.out.println("No se pudo encontrar el archivo");
+        } catch (Exception e) {
+            System.out.println("Error grave al importar el archivo");
         }
 
         int lineNumber = 1;
