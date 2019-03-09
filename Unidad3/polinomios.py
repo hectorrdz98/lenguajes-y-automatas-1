@@ -26,8 +26,7 @@ examples = [
     'x+1=0',
     'x^2-x+5=0',
     'x^2+x+5=0',
-    'x+5=0',
-    'x=0',
+    'x+5=0'
 ]
 
 for polinomio in examples:
