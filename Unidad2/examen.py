@@ -20,6 +20,11 @@ RegexPatterns = {
         r'([Ll][Uu][Nn][Ee][Ss]|[Mm][Aa][Rr][Tt][Ee][Ss]|[Mm][Ii][EeÉé][Rr][Cc][Oo][Ll][Ee][Ss]|[Jj][Uu][Ee][Vv][Ee][Ss]|[Vv][Ii][Ee][Rr][Nn][Ee][Ss]|[Ss][AaÁá][Bb][Aa][Dd][Oo]|[Dd][Oo][Mm][Ii][Nn][Gg][Oo])',
         r'[A-Z]'
     ],
+    'Mes con mayúscula': [
+        'special',
+        r'([Ee][Nn][Ee][Rr][Oo]|[Ff][Ee][Bb][Rr][Ee][Rr][Oo]|[Mm][Aa][Rr][Zz][Oo]|[Aa][Bb][Rr][Ii][Ll]|[Mm][Aa][Yy][Oo]|[Jj][Uu][Nn][Ii][Oo]|[Jj][Uu][Ll][Ii][Oo]|[Aa][Gg][Oo][Ss][Tt][Oo]|[Ss][Ee][Pp][Tt][Ii][Ee][Mm][Bb][Rr][Ee]|[Oo][Cc][Tt][Uu][Bb][Rr][Ee]|[Nn][Oo][Vv][Ii][Ee][Mm][Bb][Rr][Ee]|[Dd][Ii][Cc][Ii][Ee][Mm][Bb][Rr][Ee])',
+        r'[A-Z]'
+    ],
     'Hay un ! o ? y un punto': [
         'normal',
         r'(\w*[!?]\s*[\.]\w*)'
