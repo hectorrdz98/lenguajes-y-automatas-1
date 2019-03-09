@@ -27,7 +27,7 @@ examples = [
     'x^2-x+5=0',
     'x^2+x+5=0',
     'x+5=0',
-    'x=0'
+    'x=0',
 ]
 
 for polinomio in examples:
@@ -203,7 +203,7 @@ for polinomio in examples:
         #print('\nLlegamos al final correctamente')
 
     else:
-        print('No es un polinomio válido')
+        print('{} no es un polinomio válido'.format(polinomio))
 
     print()
     print()
