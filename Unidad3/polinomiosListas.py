@@ -1,14 +1,12 @@
 import re
+import math
 
 # Variables 
 
 polinomio = input()
-
-print('El polinomio es: {}'.format(polinomio))
-
-estadoActual = 'q0'
-notAssigCoef = 'b'    
-coefs = {             
+estadoActual = 'q0'   # Estado actual
+notAssigCoef = 'b'    # Variables temporal para el coeficiente actual
+coefs = {             # Coeficientes
     'a': '',
     'b': '',
     'c': ''
@@ -16,11 +14,11 @@ coefs = {
 
 # Funciones necesarias
 
-def add2Coef(thing):
+def add2Coef(thing): # Nos permite agregar mas caracteres al coef
     if thing != '+':
         coefs[notAssigCoef] += thing
 
-def setCoefs():
+def setCoefs(): # Vuelve los coefs enteros
     for name,coef in coefs.items():
         if coef == '':
             coefs[name] = 0
@@ -29,7 +27,7 @@ def setCoefs():
         else:
             coefs[name] = int(coef)
 
-def changeCoef(thing):
+def changeCoef(thing): # Cambia el coeficiente actual que está siendo encontrado
     global notAssigCoef
 
     if estadoActual == 'q3':
@@ -54,13 +52,46 @@ def changeCoef(thing):
         coefs[notAssigCoef] = ''
         notAssigCoef = 'c'
     
-
-def itExist(thing):
+def itExist(thing): # Coloca un 1 a las x solas
     global notAssigCoef
     if coefs[notAssigCoef] == '':
         coefs[notAssigCoef] = '1'
 
-automata = {
+def getXs(): # Encuentra las Xs del polinomio
+    a = coefs['a']
+    b = coefs['b']
+    c = coefs['c']
+
+    print()
+
+    if a != 0: # El polinomio tiene 2 raices
+        d = (b*b) - (4*a*c)
+        complexRoot = False
+
+        if d < 0:
+            complexRoot = True
+            d = math.fabs(d)
+
+        if complexRoot: 
+            print('x1 = {} + {}i'.format(
+                (-1*b/2*a), (math.sqrt(d)/(2*a))
+            ))
+            print('x2 = {} - {}i'.format(
+                (-1*b/2*a), (math.sqrt(d)/(2*a))
+            ))
+        else:
+            print('x1 = {}'.format(
+                (-1*b/2*a) + (math.sqrt(d)/(2*a))
+            ))
+            print('x2 = {}'.format(
+                (-1*b/2*a) - (math.sqrt(d)/(2*a))
+            ))
+    else: # El polinomio tiene una raiz
+        print('x = {}'.format(
+            (-1*c) / b
+        ))
+
+automata = { # El autómata como matriz
     'q0': [
         [r'[\d\-]', 'q1', [add2Coef]],
         [r'x', 'q3']
@@ -109,7 +140,7 @@ automata = {
     ]
 }
 
-# Codigo
+# Código
 
 for char in polinomio:
     flag = False
@@ -125,10 +156,11 @@ for char in polinomio:
     if not flag:
         break
 
-if estadoActual == 'q10':
+if estadoActual == 'q10': # Si llegó al final exitoso
     setCoefs()
+    print('El polinomio es: {}'.format(polinomio))
     print('Coefs = a:{}, b:{}, c:{}'.format(coefs['a'], coefs['b'], coefs['c']))
-    print('Llegamos al final correctamente')
+    getXs()
 
-else:
-    print('No se llegó al final')
+else: # Si no llegó a estado de éxito
+    print('{} no es un polinomio válido'.format(polinomio))
