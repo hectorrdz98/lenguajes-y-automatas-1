@@ -17,6 +17,20 @@ class State:
 class Automata:
     def __init__(self):
         self.head = None
+        self.functions = {}
+        self.vars = {}
+    
+    def addFunction(self, function):
+        self.functions[function.__name__] = function
+
+    def showFunctions(self):
+        return { name: function for name,function in self.functions.items() }
+    
+    def addVar(self, varName, varValue):
+        self.vars[varName] = varValue
+
+    def showVars(self):
+        return { name: var for name,var in self.vars.items() }
 
     def addState(self, name):
         state = State(name)
@@ -57,37 +71,39 @@ class Automata:
                 state.addPath(path[0], self.getState(path[1]), path[2])
 
     def testInput(self, string2Test):
-        res = False
         if self.head:
             actual = self.head
             for char in string2Test:
                 flag = False
                 for path in actual.paths:
-                    if re.findall(path.regex, char) != []:
-                        actual = path.destiny
+                    if re.findall(path['regex'], char) != []:
+                        actual = path['destiny']
                         flag = True
                         break
                 if not flag:
                     break
-        return res
-
-    
+            return actual.isSuccessfull
+        else:
+            return False
             
-
-automata = Automata()
-
-areaStates = {
-    'q0': [
-        [ r'[0-9\-]', 'q1', [] ],
-        [ r'x', 'q2', [] ]       
-    ],
-    'q1': [
-        [ r'[0-9\-]', 'q1', [] ],
-        [ r'x', 'q2', [] ]   
-    ],
-    'q2': []
-}
-
-automata.autoFill(areaStates)
-print([ ( x.name, x.paths ) for x in automata.getStates()])
+    def run(self, string2Run):
+        if self.head:
+            actual = self.head
+            for char in string2Run:
+                flag = False
+                for path in actual.paths:
+                    foundMatch = re.findall(path['regex'], char)
+                    if foundMatch != []:
+                        for function in path['functions']:
+                            if function in self.functions:
+                                self.functions[function](self, actual.name, foundMatch[0])
+                        actual = path['destiny']
+                        flag = True
+                        break
+                if not flag:
+                    break
+            return actual.isSuccessfull
+        else:
+            return False
+    
 
