@@ -89,6 +89,7 @@ class Automata:
     def run(self, string2Run):
         if self.head:
             actual = self.head
+            isValid = True
             for char in string2Run:
                 flag = False
                 for path in actual.paths:
@@ -101,8 +102,12 @@ class Automata:
                         flag = True
                         break
                 if not flag:
+                    isValid = False
                     break
-            return actual.isSuccessfull
+            if isValid:
+                return actual.isSuccessfull
+            else:
+                return False
         else:
             return False
     

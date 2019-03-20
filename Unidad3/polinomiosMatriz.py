@@ -142,6 +142,8 @@ automata = { # El autómata como matriz
 
 # Código
 
+isValid = True
+
 for char in polinomio:
     flag = False
     for test in automata[estadoActual]:
@@ -154,9 +156,10 @@ for char in polinomio:
             estadoActual = test[1]
             break
     if not flag:
+        isValid = False
         break
 
-if estadoActual == 'q10': # Si llegó al final exitoso
+if estadoActual == 'q10' and isValid: # Si llegó al final exitoso
     setCoefs()
     print('El polinomio es: {}'.format(polinomio))
     print('Coefs = a:{}, b:{}, c:{}'.format(coefs['a'], coefs['b'], coefs['c']))
