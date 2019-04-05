@@ -189,8 +189,8 @@ while True:
 
 
 
-    print('actState: {}'.format(actState))
-    print('currentLexic: {}'.format(lexic[currentL]))
+    # print('actState: {}'.format(actState))
+    # print('currentLexic: {}'.format(lexic[currentL]))
 
     # If we are in normal states
     if typeState == 'normal':
@@ -198,11 +198,11 @@ while True:
             flag = False
             for path in turing[actState]:
                 if path[0] == lexic[currentL][0]  or path[0] == '*':
-                    print('Got with {}'.format(path))
+                    # print('Got with {}'.format(path))
 
                     # Add instruction
                     if lexic[currentL][0] == 'BreakLine' and path[3] == 'reading':
-                        print('Add instruction')
+                        # print('Add instruction')
                         addInstruction()
                         actualInstructionParts = []
 
@@ -262,7 +262,7 @@ while True:
             flag = False
             for path in turingReserved[actState]:
                 if re.search(re.compile(path[0]), lexic[currentL][1]) != None:
-                    print('Got with {}!'.format(path))
+                    # print('Got with {}!'.format(path))
                     if path[2] == 'r':
                         currentL += 1
                     if path[2] == 'l':
@@ -292,8 +292,6 @@ while True:
             ))
             goodLexic = False
             break
-    
-    print()
 
 
 
