@@ -1,6 +1,19 @@
 import re
 import math
 
+"""
+Autor: Héctor Daniel Rodríguez Feregrino
+
+Este programa utiliza una Matriz de Adyacencia para reconocer y encontrar las raices
+de un polinomio de grado 1 o 2.
+
+Consideraciones: El formato para la entrada es: Ax^2+Bx+C=0 ó Bx+C=0, en ese orden específico,
+donde A, B y C son constantes enteras positivas o negativas. En caso de tener Bx+C=0 el programa
+regresará la raiz única y si se tiene Ax^2+Bx+C=0 regresará el conjunto de raices, sean enteras
+o conplejas.
+
+"""
+
 # Variables 
 
 polinomio = input()

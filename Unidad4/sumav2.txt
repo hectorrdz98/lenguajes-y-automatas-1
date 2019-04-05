@@ -1,0 +1,84 @@
+0 1 _ r final1
+0 0 _ r final0
+0 + _ r sumarInicio
+
+
+final0 = = r llegada0
+final0 * * r final0
+
+final1 = = r llegada1
+final1 * * r final1
+
+
+inicio0 _ _ r 0
+inicio0 * * l inicio0
+
+inicio1 _ _ r 0
+inicio1 * * l inicio1
+
+
+llegada0 _ _ * poner0
+llegada0 * * r llegada0
+
+llegada1 _ _ * poner1
+llegada1 * * r llegada1
+
+poner0 _ 0 l inicio0
+poner1 _ 1 l inicio1
+
+
+; Apartir de aquí comienza la suma 
+
+sumarInicio = = l digito
+sumarInicio * * r sumarInicio
+
+digito A A l digito
+digito B B l digito
+digito 0 A r prePonerMarca0
+digito 1 B r prePonerMarca1
+digito _ _ r limpiarIzq
+
+prePonerMarca0 = = r ponerMarca0
+prePonerMarca0 * * r prePonerMarca0
+
+prePonerMarca1 = = r ponerMarca1
+prePonerMarca1 * * r prePonerMarca1
+
+
+ponerMarca0 _ _ l ponerMarcaP0
+ponerMarca0 A A l ponerMarcaP0
+ponerMarca0 B B l ponerMarcaP0
+ponerMarca0 * * r ponerMarca0
+
+ponerMarca1 _ _ l ponerMarcaP1
+ponerMarca1 A A l ponerMarcaP1
+ponerMarca1 B B l ponerMarcaP1
+ponerMarca1 * * r ponerMarca1
+
+ponerMarcaP0 0 A l sigDigito
+ponerMarcaP0 1 B l sigDigito
+ponerMarcaP0 = = * hayCarry0
+
+ponerMarcaP1 0 B l sigDigito
+ponerMarcaP1 1 A l hayCarry
+ponerMarcaP1 = = * hayCarry
+
+sigDigito = = l digito
+sigDigito _ _ r limpiarIzq
+sigDigito * * l sigDigito
+
+hayCarry0 = A l fueIgual
+
+hayCarry = B l fueIgual
+hayCarry 0 B l sigDigito
+hayCarry 1 A l hayCarry
+
+fueIgual * = l sigDigito
+
+limpiarIzq A _ r limpiarIzq
+limpiarIzq B _ r limpiarIzq
+limpiarIzq = = r cambioNum
+
+cambioNum B 1 r cambioNum
+cambioNum A 0 r cambioNum
+cambioNum _ _ * halt_accepted

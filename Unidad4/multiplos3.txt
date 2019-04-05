@@ -1,0 +1,22 @@
+0 _ _ l reject
+0 0 _ r 0
+0 1 _ r q1
+
+q1 _ _ l reject
+q1 0 _ r q3
+q1 1 _ r q2
+
+q2 _ _ l accept
+q2 0 _ r q2
+q2 1 _ r q1
+
+q3 _ _ l reject
+q3 0 _ r q1
+q3 1 _ r q3
+
+accept * : r accept2
+accept2 * ) * halt-accept
+
+reject _ : r reject2
+reject * _ l reject
+reject2 * ( * halt-reject

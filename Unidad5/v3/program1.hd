@@ -1,0 +1,29 @@
+n1 = 5
+n2 = 6.7
+n3 = 8 + 2
+n4 = 9 + 1.9
+n5 = 9 - 1.9
+n6 = 10 * n1 / n2
+n7 = 7 * n4 + n6
+
+nombres = 'Hector Daniel'
+apellidos = "Rodriguez Feregrino"
+edad = 19 + 1
+
+print()
+print(n1 + n2)
+print('Hola')
+print('Mi edad es: ' + edad)
+
+if (edad < 18) {
+    print('Niño')
+} else {
+    print('Adulto')
+}
+
+func saludar(nombre) {
+    print('Hola ' + nombre)
+}
+
+saludar('pedro')
+saludar(nombres)

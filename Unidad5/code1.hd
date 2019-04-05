@@ -1,0 +1,28 @@
+
+print 'Hola'
+print "Con mas comillas"
+
+
+; Sumar dos enteros e imprimir la suma
+
+n1 = 24+2*5
+n2 = 12
+n3 = suma(n1, n2)
+
+print n3
+
+func suma(x, y) {
+    return x + y
+}
+
+
+; Llamar a function e imprimir una concatenación
+
+nombre = 'Hector'
+saludar(nombre)
+
+func saludar(nombre) {
+    print 'Hola ' + nombre
+}
+
+

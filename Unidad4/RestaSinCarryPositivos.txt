@@ -1,0 +1,119 @@
+0 1 _ r final1
+0 0 _ r final0
+0 - _ r acomodar
+
+final0 = = r llegada0
+final0 * * r final0
+
+final1 = = r llegada1
+final1 * * r final1
+
+
+inicio0 _ _ r 0
+inicio0 * * l inicio0
+
+inicio1 _ _ r 0
+inicio1 * * l inicio1
+
+
+llegada0 _ _ * poner0
+llegada0 * * r llegada0
+
+llegada1 _ _ * poner1
+llegada1 * * r llegada1
+
+poner0 _ 0 l inicio0
+poner1 _ 1 l inicio1
+
+
+; Acomodamos el cursor en el =
+acomodar = = l sigDigito
+acomodar * * r acomodar
+
+
+; Aquí comienza la resta
+
+; Obtener el sig digito de la izq != A, B
+sigDigito _ _ r limpiarIzq
+sigDigito A A l sigDigito
+sigDigito B B l sigDigito
+sigDigito 0 B r moverHastaIgual0
+sigDigito 1 A r moverHastaIgual1
+0 1 _ r final1
+0 0 _ r final0
+0 - _ r acomodar
+
+final0 = = r llegada0
+final0 * * r final0
+final1 = = r llegada1
+final1 * * r final1
+
+inicio0 _ _ r 0
+inicio0 * * l inicio0
+inicio1 _ _ r 0
+inicio1 * * l inicio1
+
+llegada0 _ _ * poner0
+llegada0 * * r llegada0
+llegada1 _ _ * poner1
+llegada1 * * r llegada1
+
+poner0 _ 0 l inicio0
+poner1 _ 1 l inicio1
+
+
+; Acomodamos el cursor en el =
+acomodar = = l sigDigito
+acomodar * * r acomodar
+
+
+; Aquí comienza la resta
+
+; Obtener el sig digito de la izq != A, B
+sigDigito _ _ r limpiarIzq
+sigDigito A A l sigDigito
+sigDigito B B l sigDigito
+sigDigito 0 B r moverHastaIgual0
+sigDigito 1 A r moverHastaIgual1
+
+; Mover el sigDigito hasta el =
+moverHastaIgual0 = = r moverHastaLimite0
+moverHastaIgual0 * * r moverHastaIgual0
+moverHastaIgual1 = = r moverHastaLimite1
+moverHastaIgual1 * * r moverHastaIgual1
+
+; Mover el sigDigito hasta el numero antes de A,B
+moverHastaLimite0 A A l checarCon0
+moverHastaLimite0 B B l checarCon0
+moverHastaLimite0 _ _ l checarCon0
+moverHastaLimite0 * * r moverHastaLimite0
+moverHastaLimite1 A A l checarCon1
+moverHastaLimite1 B B l checarCon1
+moverHastaLimite1 _ _ l checarCon1
+moverHastaLimite1 * * r moverHastaLimite1
+
+; Checar con 0, en este caso, no importa que allá, se deja lo que tenga
+checarCon0 0 B l regresarAIgual
+checarCon0 1 A l regresarAIgual
+
+; Checar con 1, en este caso, si es 1 se pone 0, si es 0 hay carry
+checarCon1 0 B l regresarAIgual
+checarCon1 1 B l regresarAIgual
+
+; Regresar a = despues de poner checar el 
+regresarAIgual = = l sigDigito
+regresarAIgual * * l regresarAIgual
+
+
+
+; Limpiar los digitos de la izq
+limpiarIzq = = r convertir
+limpiarIzq * _ r limpiarIzq
+
+; Convertir el resultado
+convertir 0 0 r convertir
+convertir 1 1 r convertir
+convertir B 0 r convertir
+convertir A 1 r convertir
+convertir _ _ * halt-accepted
+

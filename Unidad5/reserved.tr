@@ -1,0 +1,15 @@
+
+# Initial reserved
+
+init print * r function
+
+
+# Function states
+
+function    ( * r funcCloPare
+
+funcCloPare ) * l funcOpePare
+funcCloPare * * r funcCloPare
+
+funcOpePare ( * r funcParams
+funcOpePare * * l funcOpePare

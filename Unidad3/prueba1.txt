@@ -1,0 +1,8 @@
+HTTP/1.2 200 OK
+Date: Thu, 05 Jul 2010 14:28:02 GMT
+Server: Apache
+Last-Modified: True, 04 Jul 2010 20:18:22 GMT
+ETag: "51142bc1-7449-525"
+Accept-Ranges: bytes
+Content-Length: 56
+Content-Type: text/php

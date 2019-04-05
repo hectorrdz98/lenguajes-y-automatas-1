@@ -1,0 +1,36 @@
+
+# Just reading, searching for something
+
+reading             ReservedWord    * * gettingReserved
+reading             Variable        * r variableAssign
+
+
+# variableAssign area
+
+variableAssign      EqualSign       * r variableValue
+
+
+
+
+# Just exited from reserved.tr
+
+# Function params
+
+funcParams          SingleQuote     * r funcNeedSQClose
+funcParams          Integer         * r funcCheckExp
+funcParams          Variable        * r funcCheckExp
+funcParams          CloParenthesis  * r reading
+
+funcNeedSQClose     SingleQuote     * r funcCheckExp
+funcNeedSQClose     *               * r funcNeedSQClose
+
+funcCheckExp        CloParenthesis  * r reading
+funcCheckExp        PlusOperator    * r funcNeedThing
+funcCheckExp        MinusOperator   * r funcNeedThing
+funcCheckExp        MultiOperator   * r funcNeedThing
+funcCheckExp        DivOperator     * r funcNeedThing
+funcCheckExp        PowOperator     * r funcNeedThing
+
+funcNeedThing       SingleQuote     * * funcParams
+funcNeedThing       Integer         * * funcParams
+funcNeedThing       Variable        * * funcParams
