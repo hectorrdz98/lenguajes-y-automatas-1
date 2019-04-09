@@ -76,11 +76,30 @@ with open('reserved.tr') as file:
                         thing[1], thing[2], thing[3], thing[4]
                     ])
 
+turingReservedCheck = {}
+
+with open('reservedCheck.tr') as file:
+    for line in file:
+        if line != '' and line != '\n':
+            comment = re.split('#', line)
+            if comment[0] != '':
+                thing = comment[0]
+                thing = re.split(r'\s+', thing)
+                if thing[0] in turingReservedCheck:
+                    turingReservedCheck[thing[0]].append([
+                        thing[1], thing[2], thing[3], thing[4]
+                    ])
+                else:
+                    turingReservedCheck[thing[0]] = []
+                    turingReservedCheck[thing[0]].append([
+                        thing[1], thing[2], thing[3], thing[4]
+                    ])
+
 # print()
-# print('{}{}Reserved turing model{}'.format(
+# print('{}{}Reserved CHECK turing model{}'.format(
 #     textColors['bold'], textColors['blue'], textColors['reset']
 # ))
-# print(turingReserved)
+# print(turingReservedCheck)
 # print()
 # print('{}{}---------------------------------------------------------{}'.format(
 #     textColors['bold'], textColors['blue'], textColors['reset']
@@ -95,7 +114,10 @@ exitReserved = [
     'errorFNClose',
     'errorFInvCall',
     'errorFInvCall2',
-    'functionNoParams'
+    'functionNoParams',
+    'reservedNotStr',
+    'errorStrOp',
+    'errorInvOp'
 ]
 
 # Errors
@@ -189,8 +211,8 @@ while True:
 
 
 
-    # print('actState: {}'.format(actState))
-    # print('currentLexic: {}'.format(lexic[currentL]))
+    print('actState: {}'.format(actState))
+    print('currentLexic: {}'.format(lexic[currentL]))
 
     # If we are in normal states
     if typeState == 'normal':
@@ -198,7 +220,7 @@ while True:
             flag = False
             for path in turing[actState]:
                 if path[0] == lexic[currentL][0]  or path[0] == '*':
-                    # print('Got with {}'.format(path))
+                    print('Got with {}'.format(path))
 
                     # Add instruction
                     if lexic[currentL][0] == 'BreakLine' and path[3] == 'reading':
@@ -249,6 +271,9 @@ while True:
             if actState == 'gettingReserved':
                 actState = 'init'
                 typeState = 'reserved'
+            elif actState == 'gettingReservedNotStr':
+                actState = 'notStr'
+                typeState = 'reservedCheck'
             else:    
                 print('\n{}{}The state is not in turing{}'.format(
                     textColors['bold'], textColors['red'], textColors['reset']
@@ -257,10 +282,14 @@ while True:
                 break
 
     # If we are in reserved states
-    elif typeState == 'reserved':
-        if actState in turingReserved:
+    elif typeState == 'reserved' or typeState == 'reservedCheck':
+        turingReservedToCheck = turingReserved
+        if typeState == 'reservedCheck':
+            turingReservedToCheck = turingReservedCheck
+
+        if actState in turingReservedToCheck:
             flag = False
-            for path in turingReserved[actState]:
+            for path in turingReservedToCheck[actState]:
                 if re.search(re.compile(path[0]), lexic[currentL][1]) != None:
                     # print('Got with {}!'.format(path))
                     if path[2] == 'r':
@@ -279,17 +308,29 @@ while True:
                 print('\n{}{}You have syntax errors:{}'.format(
                     textColors['bold'], textColors['red'], textColors['reset']
                 ))
-                print('\n{}{}Not a valid reserved path for {} in {}{}'.format(
-                    textColors['bold'], textColors['red'], 
-                    lexic[currentL], actState,
-                    textColors['reset']
-                ))
+                if typeState == 'reserved':
+                    print('\n{}{}Not a valid reserved path for {} in {}{}'.format(
+                        textColors['bold'], textColors['red'], 
+                        lexic[currentL], actState,
+                        textColors['reset']
+                    ))
+                else:
+                    print('\n{}{}Not a valid CHECK reserved path for {} in {}{}'.format(
+                        textColors['bold'], textColors['red'], 
+                        lexic[currentL], actState,
+                        textColors['reset']
+                    ))
                 goodLexic = False
                 break
         else:
-            print('\n{}{}The reserved state is not in turing{}'.format(
-                textColors['bold'], textColors['red'], textColors['reset']
-            ))
+            if typeState == 'reserved':
+                print('\n{}{}The reserved state is not in turing{}'.format(
+                    textColors['bold'], textColors['red'], textColors['reset']
+                ))
+            else:
+                print('\n{}{}The reserved CHECK state is not in turing{}'.format(
+                    textColors['bold'], textColors['red'], textColors['reset']
+                ))
             goodLexic = False
             break
 

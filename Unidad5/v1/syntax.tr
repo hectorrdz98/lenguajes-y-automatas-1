@@ -26,6 +26,7 @@ variableValueNotStr Float           * r variableENDL
 variableValueNotStr Variable        * r variableENDL
 variableValueNotStr StringSQ        * r errorStrOp
 variableValueNotStr StringDQ        * r errorStrOp
+variableValueNotStr ReservedWord    * * gettingReservedNotStr
 variableValueNotStr *               * l errorInvOp
 
 variableENDL        BreakLine       * r reading
@@ -96,6 +97,11 @@ funcNeedThingNotStr *               * * errorStrOp
 
 funcENDL            BreakLine       * r reading
 
+
+# Exited ReservedWordCheck
+
+reservedNotStr      OpParenthesis   * r reservedNotStr
+reservedNotStr      CloParenthesis  * r variableENDL
 
 
 # Errors
