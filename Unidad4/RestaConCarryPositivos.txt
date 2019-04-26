@@ -1,22 +1,33 @@
+; Hector Daniel Rodriguez Feregrino
+
+; Maquina de Turing para realizar la resta de 2
+; numero binarios en el formato num1-num2=
+; donde num1 es mayor que num2
+
+; Detectamos el inicio
 0 1 _ r final1
 0 0 _ r final0
 0 - _ r acomodar
 
+; Llevamos el 1 o 0 al final
 final0 = = r llegada0
 final0 * * r final0
 final1 = = r llegada1
 final1 * * r final1
 
+; Regresamos al inicio el puntero
 inicio0 _ _ r 0
 inicio0 * * l inicio0
 inicio1 _ _ r 0
 inicio1 * * l inicio1
 
+; Movemos el puntero al final del input
 llegada0 _ _ * poner0
 llegada0 * * r llegada0
 llegada1 _ _ * poner1
 llegada1 * * r llegada1
 
+; Ponemos un 0 o 1
 poner0 _ 0 l inicio0
 poner1 _ 1 l inicio1
 

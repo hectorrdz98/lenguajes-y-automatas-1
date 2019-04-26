@@ -1,8 +1,16 @@
+; Hector Daniel Rodriguez Feregrino
+
+; Maquina de Turing para realizar la suma de 2
+; numero binarios en el formato num1+num2=
+
+
+; Detectamos el inicio
 0 1 _ r final1
 0 0 _ r final0
 0 + _ r sumarInicio
 
 
+; Llevamos el 1 o 0 al final
 final0 = = r llegada0
 final0 * * r final0
 
@@ -10,6 +18,7 @@ final1 = = r llegada1
 final1 * * r final1
 
 
+; Regresamos al inicio el puntero
 inicio0 _ _ r 0
 inicio0 * * l inicio0
 
@@ -17,12 +26,14 @@ inicio1 _ _ r 0
 inicio1 * * l inicio1
 
 
+; Movemos el puntero al final del input
 llegada0 _ _ * poner0
 llegada0 * * r llegada0
 
 llegada1 _ _ * poner1
 llegada1 * * r llegada1
 
+; Ponemos un 0 o 1
 poner0 _ 0 l inicio0
 poner1 _ 1 l inicio1
 
@@ -32,12 +43,14 @@ poner1 _ 1 l inicio1
 sumarInicio = = l digito
 sumarInicio * * r sumarInicio
 
+; Aqui leemos un digito del lado izq
 digito A A l digito
 digito B B l digito
 digito 0 A r prePonerMarca0
 digito 1 B r prePonerMarca1
 digito _ _ r limpiarIzq
 
+; Ponemos el puntero despues del =
 prePonerMarca0 = = r ponerMarca0
 prePonerMarca0 * * r prePonerMarca0
 
@@ -45,6 +58,7 @@ prePonerMarca1 = = r ponerMarca1
 prePonerMarca1 * * r prePonerMarca1
 
 
+; Ponemos la A o B para indicar que ya hicimos eso
 ponerMarca0 _ _ l ponerMarcaP0
 ponerMarca0 A A l ponerMarcaP0
 ponerMarca0 B B l ponerMarcaP0
@@ -63,10 +77,12 @@ ponerMarcaP1 0 B l sigDigito
 ponerMarcaP1 1 A l hayCarry
 ponerMarcaP1 = = * hayCarryPuro
 
+; Vamos a por el siguiente digito
 sigDigito = = l digito
 sigDigito _ _ r limpiarIzq
 sigDigito * * l sigDigito
 
+; En el resto de estados es para hacer algo si hay carry
 hayCarry0Puro = A l fueIgual
 
 hayCarry0 = 0 l fueIgual
@@ -81,10 +97,12 @@ hayCarry 1 0 l hayCarry
 
 fueIgual * = * sigDigito
 
+; Limpiamos las A y B de la izq
 limpiarIzq A _ r limpiarIzq
 limpiarIzq B _ r limpiarIzq
 limpiarIzq = = r cambioNum
 
+; Cambiamos las A y B por 0 y 1 del resultado
 cambioNum B 1 r cambioNum
 cambioNum A 0 r cambioNum
 cambioNum 1 1 r cambioNum

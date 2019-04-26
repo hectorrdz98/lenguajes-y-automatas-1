@@ -1,3 +1,10 @@
+; Hector Daniel Rodriguez Feregrino
+; Maquina de Turing para detectar multiplos de 3
+
+; Para su desarrollo me base en el diagrama
+; que realizamos en JFlap, solo lo traslade
+; a este entorno
+
 0 _ _ l reject
 0 0 _ r 0
 0 1 _ r q1
