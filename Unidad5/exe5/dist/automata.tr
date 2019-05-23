@@ -1,0 +1,121 @@
+
+# Searching states
+
+searching       \n          *       r       foundBreakLine
+searching       \s          *       r       searching
+searching       \;          *       r       foundComment
+searching       \_          *       r       pVariable
+searching       [a-zA-Z]    *       r       pResVar
+searching       \d          *       r       pInteger
+searching   [\+|\-\*\/\^]   *       r       foundOperator
+searching       \=          *       r       foundEqual
+searching       \"          *       r       pDoubleQ
+searching       \'          *       r       pSingleQ
+searching       \,          *       r       foundComa
+searching       \(          *       r       foundOpPara
+searching       \)          *       r       foundCloPara
+searching       \{          *       r       foundOpBrace
+searching       \}          *       r       foundCloBrace
+searching       \<          *       r       foundLowChar
+searching       \>          *       r       foundGreChar
+searching       \!          *       r       foundDiffChar
+searching       \.          *       r       pFNumber
+searching       .           *       r       nothing
+
+
+# Posible Reserved Word or Variable
+
+pResVar         \s          *       *       foundResVar
+pResVar    [\+|\-\*\/\^]    *       *       foundResVar
+pResVar         \=          *       *       foundResVar
+pResVar         \"          *       *       foundResVar
+pResVar         \'          *       *       foundResVar
+pResVar         \,          *       *       foundResVar
+pResVar         \)          *       *       foundResVar
+pResVar         \(          *       *       foundResVar
+pResVar         \{          *       *       foundResVar
+pResVar         \}          *       *       foundResVar
+pResVar         [a-zA-Z]    *       r       pResVar
+pResVar         [\d|\_]     *       r       pVariable
+pResVar         .           *       r       nothing
+
+
+# Posible Variables
+
+pVariable       \s          *       *       foundVar
+pVariable  [\+|\-\*\/\^]    *       *       foundVar
+pVariable       \=          *       *       foundVar
+pVariable       \"          *       *       foundVar
+pVariable       \'          *       *       foundVar
+pVariable       \,          *       *       foundVar
+pVariable       \)          *       *       foundVar
+pVariable       \(          *       *       foundVar
+pVariable       \{          *       *       foundVar
+pVariable       \}          *       *       foundVar
+pVariable       \w          *       r       pVariable
+pVariable       \d          *       r       pVariable
+pVariable       .           *       r       nothing     
+
+
+# Posible pInteger
+
+pInteger        \s          *       *       foundInteger
+pInteger   [\+|\-\*\/\^]    *       *       foundInteger
+pInteger        \=          *       *       foundInteger
+pInteger        \"          *       *       foundInteger
+pInteger        \'          *       *       foundInteger
+pInteger        \(          *       *       foundInteger
+pInteger        \)          *       *       foundInteger
+pInteger        \{          *       *       foundInteger
+pInteger        \}          *       *       foundInteger
+pInteger        \d          *       r       pInteger
+pInteger        \.          *       r       pFNumber
+pInteger        .           *       r       nothing   
+
+
+# Posible float
+
+pFNumber        \s          *       *       foundFloat
+pFNumber   [\+|\-\*\/\^]    *       *       foundFloat
+pFNumber        \=          *       *       foundFloat
+pFNumber        \"          *       *       foundFloat
+pFNumber        \'          *       *       foundFloat
+pFNumber        \(          *       *       foundFloat
+pFNumber        \)          *       *       foundFloat
+pFNumber        \{          *       *       foundFloat
+pFNumber        \}          *       *       foundFloat
+pFNumber        \d          *       r       pFNumber
+pFNumber        .           *       r       nothing   
+
+
+
+# Posible strings
+
+pSingleQ        \'          *       r       foundStringSQ
+pSingleQ        \n          *       l       pSQError
+pSingleQ        .           *       r       pSingleQ
+
+pSQError        \'          *       r       foundSingleQ
+pSQError        .           *       l       pSQError
+
+pDoubleQ        \"          *       r       foundStringDQ
+pDoubleQ        \n          *       l       pDQError
+pDoubleQ        .           *       r       pDoubleQ
+
+pDQError        \"          *       r       foundDoubleQ
+pDQError        .           *       l       pDQError
+
+
+
+# It's nothing
+
+nothing         \s          *       *       foundNothing
+nothing    [\+|\-\*\/\^]    *       *       foundNothing
+nothing         \=          *       *       foundNothing
+nothing         \"          *       *       foundNothing
+nothing         \'          *       *       foundNothing
+nothing         \(          *       *       foundNothing
+nothing         \)          *       *       foundNothing
+nothing         \{          *       *       foundNothing
+nothing         \}          *       *       foundNothing
+nothing         .           *       r       nothing

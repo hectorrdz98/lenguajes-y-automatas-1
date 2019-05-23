@@ -1,17 +1,18 @@
-print
-func
-return
-class
-for
-if
-while
-else
-die
-readLn
-readInt
-readChar
-readFloat
-and
-or
-true
-false
+func Func
+return Return
+class Class
+for For
+if If
+while While
+else Else
+die Die
+and And
+or Or
+true True
+false False
+
+print Function
+readLn Function
+readInt Function
+readChar Function
+readFloat Function

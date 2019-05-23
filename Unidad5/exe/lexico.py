@@ -3,6 +3,19 @@ import pickle
 import sys
 import os
 
+"""
+
+Autor: Héctor Daniel Rodríguez Feregrino
+
+Este programa toma un archivo fuente y detecta los componentes
+léxicos para mostarlos y guardar la lista resultante en un archivo
+.data
+
+Para ejecutar el programa es necesario escribir:
+>> python lexico.py archivoFuente.hd 
+
+"""
+
 # All variables
 
 if len(sys.argv) > 1:
@@ -35,9 +48,10 @@ reservedWords = []
 
 with open(reservedWordsPath) as file:
     for line in file:
-        words = re.split(r'\s+', line)
+        words = re.split(r'\n+', line)
         for word in words:
             if word != '':
+                word = word.split(' ')
                 reservedWords.append(word)
 
 
@@ -67,6 +81,8 @@ for data in datas:
 
 # Create special actions for some states in turing
 
+# Este metodo checa si lo obtenido es variable o palabra reservada
+# y lo almacena con su respectivo token
 def isReserved():
     global actualState
     codeLine = codeLines[aL]
@@ -74,17 +90,27 @@ def isReserved():
     thing = re.split(r'\s+', thing)[0]
     # print('Estoy viendo si {} es palabra reservada'.format(thing))
     name = ''
-    if thing in reservedWords:
-        name = 'ReservedWord'
-    else:
+    isRes = False
+
+    for reservedWord in reservedWords:
+        if thing == reservedWord[0]:
+            name = reservedWord[1]
+            isRes = True
+            break
+    
+    if not isRes:
         name = 'Variable'
+
     lexic.append([
         name, thing, 
         initialChar, initialChar + len(thing),
         aL
     ])
+    
     actualState = 'searching'
 
+# Este método almacena el token de los componente que consisten
+# en un solo caracter
 def getOneChar():
     global actualState
     global bigError
@@ -142,6 +168,8 @@ def getOneChar():
     else:
         bigError = True
 
+# Este método almacena todos aquellos tokens de longitud
+# mayor a 1. Ej: variables, enteros, flotantes y los errores
 def putContent():
     global actualState
     global bigError
@@ -172,6 +200,7 @@ def putContent():
     else:
         bigError = True
 
+# Este método almacena los strings de comilla simple y comilla doble
 def getString():
     global actualState
     global bigError
@@ -199,6 +228,7 @@ def getString():
     else:
         bigError = True
 
+# Este método salta de linea
 def jumpLine():
     global aL
     global aR
@@ -208,7 +238,8 @@ def jumpLine():
     actualState = 'searching'
 
 
-
+# Con este JSON vemos a que método ir dependiendo del estado
+# en el turing
 actions = {
     'foundResVar':      [isReserved],
 
@@ -292,11 +323,11 @@ while True:
             pointerFlag = True
             activeActualChar = False
         if aL < 0:                              # If point line is < 0
-            print('The point line is lower than 0...')
+            # print('The point line is lower than 0...')
             pointerFlag = True
             break
         if aL >= len(codeLines):                # If point line if greater than codeLines
-            print('The point line exceded code lines...')
+            # print('The point line exceded code lines...')
             aL = aL - 1
             actualState = 'foundBreakLine'
             for action in actions[actualState]:
@@ -388,6 +419,7 @@ textColors = {
 
 import os           
 os.system('color')          # Activate color mode in terminal
+
 
 print()
 print()

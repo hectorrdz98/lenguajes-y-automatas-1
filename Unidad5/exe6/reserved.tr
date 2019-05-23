@@ -1,0 +1,29 @@
+
+# Initial reserved
+
+init print      * r function
+init readLn     * r functionNParams
+init readInt    * r functionNParams
+init readChar   * r functionNParams
+init readFloat  * r functionNParams
+
+
+# Function states
+
+function        \(       * r funcCloPare
+function        .        * l errorFInvCall
+
+funcCloPare     \)      * l funcOpePare
+funcCloPare     \n      * l errorFNClose
+funcCloPare     .       * r funcCloPare
+
+funcOpePare     \(      * * funcParamsInit
+funcOpePare     .       * l funcOpePare
+
+functionNParams \(      * r funcNPCloPare
+functionNParams \n      * l errorFInvCall
+functionNParams .       * l errorFInvCall
+
+funcNPCloPare   \)      * l functionNoParams
+funcNPCloPare   \n      * l errorFNClose
+funcNPCloPare   .       * l errorFInvCall2

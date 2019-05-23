@@ -1,0 +1,18 @@
+var1 = 5
+var2 = 4.5
+
+var3 = var1 * var2 + 10
+
+print("Hola, el resultado es: " + var3)
+
+if (var3 > 5) {
+    print('Ingresa el n2: ')
+    readLn()
+} else {
+    for n (5) {
+        print(n)
+    }
+}
+
+nombre = "Hector Rdz"
+print("Hola " + nombre + "!")

@@ -1,0 +1,17 @@
+print
+func
+return
+class
+for
+if
+while
+else
+die
+readLn
+readInt
+readChar
+readFloat
+and
+or
+true
+false

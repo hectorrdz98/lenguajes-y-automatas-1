@@ -1,0 +1,18 @@
+# Initial reserved
+
+notStr print            * * errorInvOp
+notStr readLn           * * errorStrOp
+notStr readChar         * * errorStrOp
+notStr readInt          * r functionNParams
+notStr readFloat        * r functionNParams
+
+
+# Functions
+
+functionNParams         \(      * r funcNPCloPare
+functionNParams         \n      * l errorFInvCall
+functionNParams         .       * l errorFInvCall
+
+funcNPCloPare           \)      * l reservedNotStr
+funcNPCloPare           \n      * l errorFNClose
+funcNPCloPare           .       * l errorFInvCall2
