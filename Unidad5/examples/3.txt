@@ -1,0 +1,9 @@
+
+posible = true
+n1 = 8
+
+if (posible and n1 <= 10 or 2 <= (n1 + 2) * (n1 - 3)) {
+    print('Ok')
+} else {
+    print('Nop')
+}

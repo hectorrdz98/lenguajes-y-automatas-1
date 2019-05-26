@@ -1,3 +1,0 @@
-if (n1 < 3) {
-    print("Hola mundo")
-}

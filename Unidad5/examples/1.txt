@@ -1,0 +1,15 @@
+n1 = 5
+n2 = 9
+
+if (n1 <= n2) { 
+    suma = n1 + n2
+    print("El numero " + n1 + "es menor o igual que " + n2)
+    print("Su suma es: " + suma)
+
+} else {
+    resta = n1 - n2
+    print("El numero " + n1 + "es mayor que " + n2)
+    print("Su resta es: " + resta)
+}
+
+n3 = (6 + 7) * 8

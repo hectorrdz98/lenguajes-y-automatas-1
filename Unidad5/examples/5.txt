@@ -1,0 +1,13 @@
+
+usuario = readLn()
+contrasena = readLn()
+
+if (nombre == 'hector') {
+    if (contrasena == '123123') {
+        print('Exito! Datos correctos')
+    } else {
+        print('Contraseña incorrecta')
+    }
+} else {
+    print('Usuario incorrecto')
+}

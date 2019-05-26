@@ -1,9 +1,0 @@
-n1 = 5
-
-if (n1 <= 30) {
-    print('Perfecto')
-} else {
-    print('Muy mal')
-}
-
-n2 = 565x + 45.9

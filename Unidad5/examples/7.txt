@@ -1,0 +1,14 @@
+
+while(true) {
+    num = readInt()
+    while(num > 0) {
+        print(num)
+    }
+
+    print('¿Desea salir?')
+    salir = readLn()
+
+    if (salir == 'si' or salir == 'SI' or salir == 'Si') {
+        break
+    }
+}

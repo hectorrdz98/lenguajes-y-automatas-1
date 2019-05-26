@@ -1,36 +1,200 @@
 
 # Just reading, searching for something
 
-reading             ReservedWord    * * gettingReserved
+reading             BreakLine       * r reading
 reading             Variable        * r variableAssign
+reading             Function        * r checkFunction
+reading             If              * r isIf
+reading             Else            * * preCheckElse
+reading             CloBrace        * * stackBrace
+reading             While           * r isWhile
+reading             Break           * * checkValidBreak
+reading             *               * * errorUn
 
 
 # variableAssign area
 
 variableAssign      EqualSign       * r variableValue
+variableAssign      PlusOperator    * r variableValuePre
+variableAssign      MinusOperator   * r variableValuePre
+variableAssign      MultiOperator   * r variableValuePre
+variableAssign      DivOperator     * r variableValuePre
+variableAssign      PowOperator     * r variableValuePre
+variableAssign      *               * l errorInvVarDec
+
+variableValuePre    EqualSign       * r variableValue
+variableValuePre    *               * l errorInvVarDec
+
+variableValue       Integer         * r variableENDL
+variableValue       Float           * r variableENDL
+variableValue       Variable        * r variableENDL
+variableValue       StringSQ        * r variableENDLStr
+variableValue       StringDQ        * r variableENDLStr
+variableValue       SingleQuote     * r sendErrorSQ
+variableValue       DoubleQuote     * r sendErrorDQ
+variableValue       NotValid        * l errorInvVarDecUn
+variableValue       OpParenthesis   * * stackGrouped
+variableValue       Function        * r checkFunction
+variableValue       True            * r onlyTrueFalse
+variableValue       False           * r onlyTrueFalse
+variableValue       *               * l errorInvVarDec
+
+onlyTrueFalse       BreakLine       * r reading
+onlyTrueFalse       *               * l errorInvVarDec
+
+variableValueNotStr Integer         * r variableENDL
+variableValueNotStr Float           * r variableENDL
+variableValueNotStr Variable        * r variableENDL
+variableValueNotStr StringSQ        * r errorStrOp
+variableValueNotStr StringDQ        * r errorStrOp
+variableValueNotStr OpParenthesis   * * stackGrouped
+variableValueNotStr Function        * r checkFunction
+variableValueNotStr *               * l errorInvOp
+
+variableENDL        BreakLine       * * checkGrouped
+variableENDL        PlusOperator    * r variableValue
+variableENDL        MinusOperator   * r variableValueNotStr
+variableENDL        MultiOperator   * r variableValueNotStr
+variableENDL        DivOperator     * r variableValueNotStr
+variableENDL        PowOperator     * r variableValueNotStr
+variableENDL        CloParenthesis  * * stackGrouped
+variableENDL        *               * l errorInvOp
+
+variableENDLStr     BreakLine       * * checkGrouped
+variableENDLStr     PlusOperator    * r variableValue
+variableENDLStr     MinusOperator   * r errorStrOp
+variableENDLStr     MultiOperator   * r errorStrOp
+variableENDLStr     DivOperator     * r errorStrOp
+variableENDLStr     PowOperator     * r errorStrOp
+variableENDLStr     CloParenthesis  * * stackGrouped
+variableENDLStr     *               * l errorInvOp
 
 
 
+# checkFunction area
 
-# Just exited from reserved.tr
+checkFunction       OpParenthesis   * * stackFunctionParams
+checkFunction       *               * l errorFInvCall
 
-# Function params
+checkFunction2      BreakLine       * l errorFInvCall
+checkFunction2      Integer         * r checkFuncENDL
+checkFunction2      Float           * r checkFuncENDL
+checkFunction2      Variable        * r checkFuncENDL
+checkFunction2      StringSQ        * r checkFuncENDLStr
+checkFunction2      StringDQ        * r checkFuncENDLStr
+checkFunction2      SingleQuote     * r sendErrorSQ
+checkFunction2      DoubleQuote     * r sendErrorDQ
+checkFunction2      NotValid        * l errorInvVarDecUn
+checkFunction2      OpParenthesis   * * stackFunctionParams
+checkFunction2      CloParenthesis  * l preStackFunParams
+checkFunction2      *               * l errorInvOp
 
-funcParams          SingleQuote     * r funcNeedSQClose
-funcParams          Integer         * r funcCheckExp
-funcParams          Variable        * r funcCheckExp
-funcParams          CloParenthesis  * r reading
+checkFun2NotStr     Integer         * r checkFuncENDL
+checkFun2NotStr     Float           * r checkFuncENDL
+checkFun2NotStr     Variable        * r checkFuncENDL
+checkFun2NotStr     StringSQ        * r errorStrOp
+checkFun2NotStr     StringDQ        * r errorStrOp
+checkFun2NotStr     OpParenthesis   * * stackFunctionParams
+checkFun2NotStr     *               * l errorInvOp 
 
-funcNeedSQClose     SingleQuote     * r funcCheckExp
-funcNeedSQClose     *               * r funcNeedSQClose
+checkFuncENDL       BreakLine       * l errorFInvCall
+checkFuncENDL       PlusOperator    * r checkFunction2
+checkFuncENDL       MinusOperator   * r checkFun2NotStr
+checkFuncENDL       MultiOperator   * r checkFun2NotStr
+checkFuncENDL       DivOperator     * r checkFun2NotStr
+checkFuncENDL       PowOperator     * r checkFun2NotStr
+checkFuncENDL       CloParenthesis  * * stackFunctionParams
+checkFuncENDL       *               * l errorInvOp
 
-funcCheckExp        CloParenthesis  * r reading
-funcCheckExp        PlusOperator    * r funcNeedThing
-funcCheckExp        MinusOperator   * r funcNeedThing
-funcCheckExp        MultiOperator   * r funcNeedThing
-funcCheckExp        DivOperator     * r funcNeedThing
-funcCheckExp        PowOperator     * r funcNeedThing
+checkFuncENDLStr    BreakLine       * l errorFInvCall
+checkFuncENDLStr    PlusOperator    * r checkFunction2
+checkFuncENDLStr    MinusOperator   * r errorStrOp
+checkFuncENDLStr    MultiOperator   * r errorStrOp
+checkFuncENDLStr    DivOperator     * r errorStrOp
+checkFuncENDLStr    PowOperator     * r errorStrOp
+checkFuncENDLStr    CloParenthesis  * * stackFunctionParams
+checkFuncENDLStr    *               * l errorInvOp
 
-funcNeedThing       SingleQuote     * * funcParams
-funcNeedThing       Integer         * * funcParams
-funcNeedThing       Variable        * * funcParams
+preStackFunParams   OpParenthesis   * r compStackFunctionParams
+preStackFunParams   *               * * errorInvOp
+
+
+
+# If area
+checkIf             OpParenthesis   * * stackIfParams
+checkIf             *               * l errorIfInvCall            
+
+checkIf2            BreakLine       * l errorIfInvCall
+checkIf2            Integer         * r checkIfENDL
+checkIf2            Float           * r checkIfENDL
+checkIf2            Variable        * r checkIfENDL
+checkIf2            StringSQ        * r checkIfENDLStr
+checkIf2            StringDQ        * r checkIfENDLStr
+checkIf2            SingleQuote     * r sendErrorSQ
+checkIf2            DoubleQuote     * r sendErrorDQ
+checkIf2            NotValid        * l errorInvVarDecUn
+checkIf2            OpParenthesis   * * stackIfParams
+checkIf2            True            * r activateLogicalExp2
+checkIf2            False           * r activateLogicalExp2
+checkIf2            *               * r errorInvOp
+
+checkIf2NotStr      Integer         * r checkIfENDL
+checkIf2NotStr      Float           * r checkIfENDL
+checkIf2NotStr      Variable        * r checkIfENDL
+checkIf2NotStr      StringSQ        * r errorStrOp
+checkIf2NotStr      StringDQ        * r errorStrOp
+checkIf2NotStr      OpParenthesis   * * stackIfParams
+checkIf2NotStr      *               * l errorInvOp 
+
+checkIfENDL         BreakLine       * l errorIfInvCall
+checkIfENDL         PlusOperator    * r checkIf2
+checkIfENDL         MinusOperator   * r checkIf2NotStr
+checkIfENDL         MultiOperator   * r checkIf2NotStr
+checkIfENDL         DivOperator     * r checkIf2NotStr
+checkIfENDL         PowOperator     * r checkIf2NotStr
+checkIfENDL         CloParenthesis  * * stackIfParams
+checkIfENDL         LowerThan       * r activateLogicalExp
+checkIfENDL         GreaterThan     * r activateLogicalExp
+checkIfENDL         EqualSign       * r preActLogicalExp
+checkIfENDL         Different       * r preActLogicalExp
+checkIfENDL         And             * * checkValidAndOr
+checkIfENDL         Or              * * checkValidAndOr
+checkIfENDL         *               * l errorInvOp
+
+checkIfENDLStr      BreakLine       * l errorIfInvCall
+checkIfENDLStr      PlusOperator    * r checkIf2
+checkIfENDLStr      MinusOperator   * r errorStrOp
+checkIfENDLStr      MultiOperator   * r errorStrOp
+checkIfENDLStr      DivOperator     * r errorStrOp
+checkIfENDLStr      PowOperator     * r errorStrOp
+checkIfENDLStr      CloParenthesis  * * stackIfParams
+checkIfENDLStr      EqualSign       * r preActLogicalExp
+checkIfENDLStr      Different       * r preActLogicalExp
+checkIfENDLStr      And             * * checkValidAndOr
+checkIfENDLStr      Or              * * checkValidAndOr
+checkIfENDLStr      *               * l errorInvOp
+
+checkIfENDLForced   CloParenthesis  * * stackIfParams
+checkIfENDLForced   *               * * errorIfInvLogic
+
+preActLogicalExp    EqualSign       * * activateLogicalExp
+preActLogicalExp    *               * * errorIfInvLogic
+
+posibleEqual        EqualSign       * r checkIf2
+posibleEqual        *               * * checkIf2
+
+ifContinue          OpBrace         * * stackBrace
+ifContinue          BreakLine       * r ifContinue     
+ifContinue          *               * l errorIfElseInvCall   
+
+checkElse           OpBrace         * * stackBrace
+checkElse           BreakLine       * r checkElse  
+checkElse           *               * l errorIfElseInvCall 
+
+# Errors
+
+sendErrorSQ        BreakLine       * l errorSQ
+sendErrorSQ        *               * r sendErrorSQ      
+
+sendErrorDQ        BreakLine       * l errorDQ
+sendErrorDQ        *               * r sendErrorDQ   

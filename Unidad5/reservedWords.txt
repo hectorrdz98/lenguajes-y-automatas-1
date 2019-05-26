@@ -1,9 +1,19 @@
-print
-func
-return
-class
-for
-if
-while
-else
-die
+func Func
+return Return
+class Class
+for For
+if If
+while While
+else Else
+die Die
+and And
+or Or
+true True
+false False
+break Break
+
+print Function
+readLn Function
+readInt Function
+readChar Function
+readFloat Function

@@ -1,0 +1,14 @@
+
+n1 = 0
+
+while(n1 <= 5) {
+    print(n1)
+}
+
+despedida = true
+
+if (despedida) {
+    print('Fin del programa')
+} else {
+    print('Este no es el fin... espero')
+}

@@ -1,9 +1,0 @@
-print
-func
-return
-class
-for
-if
-while
-else
-die

@@ -1,7 +1,35 @@
 import re
 import pickle
+import sys
+import os
+
+"""
+
+Autor: Héctor Daniel Rodríguez Feregrino
+
+Este programa toma un archivo fuente y detecta los componentes
+léxicos para mostarlos y guardar la lista resultante en un archivo
+.data
+
+Para ejecutar el programa es necesario escribir:
+>> python lexico.py archivoFuente.hd 
+
+"""
 
 # All variables
+
+if len(sys.argv) > 1:
+    fileName = sys.argv[1]
+else:
+    sys.exit('Missing filename arg...')
+
+if getattr(sys, 'frozen', False):
+    application_path = os.path.dirname(sys.executable)
+elif __file__:
+    application_path = os.path.dirname(__file__)
+
+reservedWordsPath = os.path.join(application_path, 'reservedWords.txt')
+automataPath = os.path.join(application_path, 'automata.tr')
 
 lastState = ''
 actualState = 'searching'
@@ -9,7 +37,6 @@ aL = 0                                      # Actual Line
 aR = 0                                      # Actual Row
 initialChar = 0                             # Found thing init char
 finalChar = 0                               # Found thins last char
-fileName = 'code3.hd'                       # Code file
 turing = {}                                 # Main turing
 actions = {}                                # Actions to do
 codeLines = []                              # Code splitted into lines
@@ -19,18 +46,19 @@ bigError = False                            # Flag for big errors
 # Save the reserved words in reservedWords list
 reservedWords = []
 
-with open('reservedWords.txt') as file:
+with open(reservedWordsPath) as file:
     for line in file:
-        words = re.split(r'\s+', line)
+        words = re.split(r'\n+', line)
         for word in words:
             if word != '':
+                word = word.split(' ')
                 reservedWords.append(word)
 
 
 # Get turing using automata.turing file model
 datas = []
 
-with open('automata.turing') as file:
+with open(automataPath) as file:
     for line in file:
         if line[0] != '#' and line != '\n':
             commentIndex = line.find('#')
@@ -53,6 +81,8 @@ for data in datas:
 
 # Create special actions for some states in turing
 
+# Este metodo checa si lo obtenido es variable o palabra reservada
+# y lo almacena con su respectivo token
 def isReserved():
     global actualState
     codeLine = codeLines[aL]
@@ -60,23 +90,36 @@ def isReserved():
     thing = re.split(r'\s+', thing)[0]
     # print('Estoy viendo si {} es palabra reservada'.format(thing))
     name = ''
-    if thing in reservedWords:
-        name = 'ReservedWord'
-    else:
+    isRes = False
+
+    for reservedWord in reservedWords:
+        if thing == reservedWord[0]:
+            name = reservedWord[1]
+            isRes = True
+            break
+    
+    if not isRes:
         name = 'Variable'
+
     lexic.append([
         name, thing, 
         initialChar, initialChar + len(thing),
         aL
     ])
+    
     actualState = 'searching'
 
+# Este método almacena el token de los componente que consisten
+# en un solo caracter
 def getOneChar():
     global actualState
     global bigError
     codeLine = codeLines[aL]
     thing = codeLine[initialChar:finalChar + 1]
-    thing = re.split(r'\s+', thing)[0]
+    if actualState != 'foundBreakLine':
+        thing = re.split(r'\s+', thing)[0]
+    else:
+        thing = '\n'
     # print('Estoy viendo si {} es palabra reservada'.format(thing))
     name = ''
     if actualState == 'foundOperator':
@@ -106,6 +149,14 @@ def getOneChar():
         name = 'OpBrace'
     if actualState == 'foundCloBrace':
         name = 'CloBrace'
+    if actualState == 'foundLowChar':
+        name = 'LowerThan'
+    if actualState == 'foundGreChar':
+        name = 'GreaterThan'
+    if actualState == 'foundDiffChar':
+        name = 'Different'
+    if actualState == 'foundBreakLine':
+        name = 'BreakLine'
 
     if name != '':
         lexic.append([
@@ -117,6 +168,8 @@ def getOneChar():
     else:
         bigError = True
 
+# Este método almacena todos aquellos tokens de longitud
+# mayor a 1. Ej: variables, enteros, flotantes y los errores
 def putContent():
     global actualState
     global bigError
@@ -132,6 +185,8 @@ def putContent():
         name = 'Variable'
     if actualState == 'foundInteger':
         name = 'Integer'
+    if actualState == 'foundFloat':
+        name = 'Float'
     if actualState == 'foundNothing':
         name = 'NotValid'
 
@@ -145,6 +200,35 @@ def putContent():
     else:
         bigError = True
 
+# Este método almacena los strings de comilla simple y comilla doble
+def getString():
+    global actualState
+    global bigError
+    codeLine = codeLines[aL]
+    thing = codeLine[initialChar:finalChar + 1]
+    
+    # print('Estoy viendo si {} es string'.format(thing))
+    
+    name = ''
+
+    # print('Entre aquí en {} y {}'.format(actualState, thing))
+
+    if actualState == 'foundStringSQ':
+        name = 'StringSQ'
+    if actualState == 'foundStringDQ':
+        name = 'StringDQ'
+
+    if name != '':
+        lexic.append([
+            name, thing, 
+            initialChar, initialChar + len(thing),
+            aL
+        ])
+        actualState = 'searching'
+    else:
+        bigError = True
+
+# Este método salta de linea
 def jumpLine():
     global aL
     global aR
@@ -154,12 +238,14 @@ def jumpLine():
     actualState = 'searching'
 
 
-
+# Con este JSON vemos a que método ir dependiendo del estado
+# en el turing
 actions = {
     'foundResVar':      [isReserved],
 
     'foundVar':         [putContent],
     'foundInteger':     [putContent],
+    'foundFloat':       [putContent],
     'foundNothing':     [putContent],
 
     'foundOperator':    [getOneChar],
@@ -171,6 +257,14 @@ actions = {
     'foundCloPara':     [getOneChar],
     'foundOpBrace':     [getOneChar],
     'foundCloBrace':    [getOneChar],
+    'foundLowChar':     [getOneChar],
+    'foundGreChar':     [getOneChar],
+    'foundDiffChar':    [getOneChar],
+
+    'foundStringSQ':    [getString],
+    'foundStringDQ':    [getString],
+
+    'foundBreakLine':   [getOneChar],
 
     'foundComment':     [jumpLine]
 }
@@ -189,7 +283,8 @@ with open(fileName, encoding='utf-8') as file:
 
 
 # Save in codeLines list all the lines in the code
-codeLines = [ line + ' ' for line in re.split(r'\n', code) ]
+# codeLines = [ line + ' ' for line in re.split(r'\n', code) ]
+codeLines = [ line + '\n' for line in re.split(r'\n', code) ]
 codeLinesCopy = codeLines
 
 
@@ -208,6 +303,9 @@ posibleGoodLexic = False
 
 while True:
 
+    # if codeLines[aL] == '\n':
+    #     aL += 1
+
     # Validate pointer
     pointerFlag = True
     while pointerFlag:
@@ -225,11 +323,15 @@ while True:
             pointerFlag = True
             activeActualChar = False
         if aL < 0:                              # If point line is < 0
-            print('The point line is lower than 0...')
+            # print('The point line is lower than 0...')
             pointerFlag = True
             break
         if aL >= len(codeLines):                # If point line if greater than codeLines
-            print('The point line exceded code lines...')
+            # print('The point line exceded code lines...')
+            aL = aL - 1
+            actualState = 'foundBreakLine'
+            for action in actions[actualState]:
+                action()
             posibleGoodLexic = True
             pointerFlag = True
             break
@@ -241,7 +343,7 @@ while True:
 
     codeLine = codeLines[aL]            # Code line we are evaluating
 
-    # print('Linea: {}'.format(codeLine))
+    # print('Linea: {}'.format([codeLine]))
     # print('Estado: {}'.format(actualState))
     # print('Caracter: {}'.format(codeLine[aR]))
     
@@ -250,6 +352,7 @@ while True:
 
         for way in turing[actualState]:
             foundMatch = re.findall(re.compile(way[0]), codeLine[aR])
+            # print(foundMatch)
             if foundMatch != []:
                 # print('Encontre: {} con {}'.format(foundMatch, way[0]))
                 lastState = actualState     # Change last state
@@ -316,6 +419,7 @@ textColors = {
 
 import os           
 os.system('color')          # Activate color mode in terminal
+
 
 print()
 print()

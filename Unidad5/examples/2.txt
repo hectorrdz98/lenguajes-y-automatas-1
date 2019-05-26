@@ -1,0 +1,8 @@
+
+saludar = true
+
+if (saludar) {
+    print("Hola")
+} else {
+    print("Bye")
+}
