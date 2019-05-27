@@ -166,7 +166,9 @@ while True:
                                 lastIf = littleBracesGrouped[len(littleBracesGrouped) - 1]
                                 if lastIf[0] and lastIf[1]:
                                     littleBracesGrouped.pop()
+                                    contLittleBracesClosed -= 1
                         else:
+                            print('contLittleBracesClosed:',contLittleBracesClosed)
                             if contLittleBracesClosed > 1:
                                 if len(littleBracesGrouped) > 0:
                                     lastIf = littleBracesGrouped[len(littleBracesGrouped) - 1]
@@ -292,24 +294,65 @@ while True:
                 actState = 'checkIf2'
                 continue
             elif lexic[currentL][0] == 'CloParenthesis':
+                print('validLogical', validLogical, len(terms))
                 if validLogical or len(terms) == 1:
+                    if len(terms) == 1:
+                        if terms[0] == 'Integer' or terms[0] == 'Float':
+                            actState = 'errorInvExp'
+                            continue
                     if len(groupedStackIfElse) > 0:
                         lastStackParen = groupedStackIfElse.pop()
                         if groupedStackIfElse == []:
                             actState = 'ifContinue'
                             validLogical = False
+                            terms = []
                         else:
-                            if lastStackParen == 'OpParenthesis':
+                            print('Okas', lastStackParen, len(groupedStackIfElse))
+                            if lastStackParen == 'OpParenthesis' and len(groupedStackIfElse) == 0:
                                 actState = 'ifContinue'
                                 validLogical = False
+                                terms = []
                             else:
-                                actState = 'checkIfENDL'
+                                if lastStackParen == 'OpParenthesis':
+                                    lastStackParen2 = groupedStackIfElse[len(groupedStackIfElse)-1]
+                                    if lastStackParen2 != 'OpParenthesis':
+                                        actState = 'ifContinue'
+                                    else:
+                                        actState = 'checkIfENDL'
+                                    validLogical = False
+                                    terms = []
+                                else:
+                                    actState = 'checkIfENDL'
                         currentL += 1
-                        terms = []
                     else:
                         actState = 'errorInvExp'
                 else:
-                    actState = 'errorIfInvLogic'
+                    if len(lastStackParen) > 0:
+                        lastStackParen = groupedStackIfElse[len(groupedStackIfElse) - 1]
+                        if lastStackParen == 'OpParenthesis':
+                            groupedStackIfElse.pop()
+                            if groupedStackIfElse == []:
+                                actState = 'ifContinue'
+                                validLogical = False
+                                terms = []
+                            else:
+                                print('OkasNew', lastStackParen, len(groupedStackIfElse))
+                                if lastStackParen == 'OpParenthesis' and len(groupedStackIfElse) == 0:
+                                    actState = 'ifContinue'
+                                    validLogical = False
+                                    terms = []
+                                else:
+                                    if lastStackParen == 'OpParenthesis':
+                                        actState = 'checkIfENDL'
+                                        validLogical = False
+                                        terms = []
+                                    else:
+                                        actState = 'checkIfENDL'
+                            currentL += 1
+                        else:
+                            actState = 'errorIfInvLogic'
+                    else:
+                        actState = 'errorIfInvLogic'
                 continue
         
         # If stackBrace
@@ -357,6 +400,7 @@ while True:
                     lastIf = littleBracesGrouped[len(littleBracesGrouped) - 1]
                     if lastIf[0] and lastIf[1]:
                         littleBracesGrouped.pop()
+                        contLittleBracesClosed -=1
                         currentL += 1
                         actState = 'checkElse'
                         continue
