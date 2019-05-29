@@ -1,0 +1,1 @@
+Unknown operator in line 4 :  if (saludar and n1 <=) {

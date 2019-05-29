@@ -1,7 +1,7 @@
 
 saludar = true
 
-if (saludar) {
+if (saludar and n1 <=) {
     print("Hola")
 } else {
     print("Bye")

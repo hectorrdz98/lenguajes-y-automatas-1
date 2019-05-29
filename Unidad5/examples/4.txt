@@ -5,7 +5,7 @@ n3 = 5
 
 if (n1 < n2) {
     if (n1 < n3) {
-        print('El menor es n1')
+        print('El menor es n1'
     } else {
         print('El menor es n3')
     }

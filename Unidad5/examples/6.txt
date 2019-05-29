@@ -1,7 +1,7 @@
 
 n1 = 0
 
-while(n1 <= 5) {
+while(n1 <= 5) 
     print(n1)
 }
 

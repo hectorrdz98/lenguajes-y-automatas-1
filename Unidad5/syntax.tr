@@ -185,11 +185,13 @@ posibleEqual        *               * * checkIf2
 
 ifContinue          OpBrace         * * stackBrace
 ifContinue          BreakLine       * r ifContinue     
-ifContinue          *               * l errorIfElseInvCall   
+ifContinue          *               * l putCorrect
+
+putCorrect          *               * l errorIfElseInvCall
 
 checkElse           OpBrace         * * stackBrace
 checkElse           BreakLine       * r checkElse  
-checkElse           *               * l errorIfElseInvCall 
+checkElse           *               * l putCorrect 
 
 # Errors
 

@@ -1,8 +1,15 @@
 
-saludar = true
+while(true) {
+    num = readInt()
+    while(num > 0) {
+        print(num)
+        num -= 1
+    }
 
-if (saludar) {
-    print("Hola")
-} else {
-    print("Bye")
+    print('¿Desea salir?')
+    salir = readLn()
+
+    if (salir == 'si' or salir == 'SI' or salir == 'Si') {
+        break
+    }
 }

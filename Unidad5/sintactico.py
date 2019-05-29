@@ -1,6 +1,19 @@
 import pickle
 import re
 
+"""
+
+Autor: Héctor Daniel Rodríguez Feregrino
+
+Este programa toma el archivo program1.hd, ejecuta el analisis
+léxico y posteriormente el analisis sintáctico del mismo. Muestra
+en consola su correcta sintaxis o el error.
+
+Para ejecutar el programa es necesario escribir:
+>> python sintactico.py
+
+"""
+
 fileName = 'program1.hd'                       # Code file
 
 import os
@@ -70,7 +83,7 @@ errors = {
     'errorInvExp': 'Invalid expression',
     'errorIfInvCall': 'Invalid if condicion, missing ( params )',
     'errorIfInvLogic': 'Invalid logical condition',
-    'errorIfElseInvCall': 'Invalid if/else call, required { }',
+    'errorIfElseInvCall': 'Invalid if/else/while call, required { }',
     'errorElse': 'Invalid else call, missing an if before',
     'errorBreak': 'Invalid usage of break, you need to be on a while or for loop',
     'errorUn': "Sorry, I don't understand what your are telling"
@@ -103,7 +116,7 @@ isWhile = False             # Chack if if or while
 
 funcForVariable = False     # Flag for variable assign of function
 
-debug = True                # If we want debug data
+debug = False               # If we want debug data
 
 while True:
 
@@ -166,12 +179,14 @@ while True:
                                 lastIf = littleBracesGrouped[len(littleBracesGrouped) - 1]
                                 if lastIf[0] and lastIf[1]:
                                     littleBracesGrouped.pop()
-                                    contLittleBracesClosed -= 1
                         else:
-                            print('contLittleBracesClosed:',contLittleBracesClosed)
+                            if debug:
+                                print('contLittleBracesClosed:',contLittleBracesClosed)
                             if contLittleBracesClosed > 1:
                                 if len(littleBracesGrouped) > 0:
                                     lastIf = littleBracesGrouped[len(littleBracesGrouped) - 1]
+                                    if debug:
+                                        print('lastIf',lastIf)
                                     if lastIf[0] and lastIf[1]:
                                         littleBracesGrouped.pop()
                                 contLittleBracesClosed = 0
@@ -294,8 +309,9 @@ while True:
                 actState = 'checkIf2'
                 continue
             elif lexic[currentL][0] == 'CloParenthesis':
-                print('validLogical', validLogical, len(terms))
-                if validLogical or len(terms) == 1:
+                if debug:
+                    print('validLogical', validLogical, len(terms))
+                if validLogical or len(terms) <= 1:
                     if len(terms) == 1:
                         if terms[0] == 'Integer' or terms[0] == 'Float':
                             actState = 'errorInvExp'
@@ -307,7 +323,6 @@ while True:
                             validLogical = False
                             terms = []
                         else:
-                            print('Okas', lastStackParen, len(groupedStackIfElse))
                             if lastStackParen == 'OpParenthesis' and len(groupedStackIfElse) == 0:
                                 actState = 'ifContinue'
                                 validLogical = False
@@ -324,35 +339,13 @@ while True:
                                 else:
                                     actState = 'checkIfENDL'
                         currentL += 1
+                        continue
                     else:
                         actState = 'errorInvExp'
                 else:
-                    if len(lastStackParen) > 0:
-                        lastStackParen = groupedStackIfElse[len(groupedStackIfElse) - 1]
-                        if lastStackParen == 'OpParenthesis':
-                            groupedStackIfElse.pop()
-                            if groupedStackIfElse == []:
-                                actState = 'ifContinue'
-                                validLogical = False
-                                terms = []
-                            else:
-                                print('OkasNew', lastStackParen, len(groupedStackIfElse))
-                                if lastStackParen == 'OpParenthesis' and len(groupedStackIfElse) == 0:
-                                    actState = 'ifContinue'
-                                    validLogical = False
-                                    terms = []
-                                else:
-                                    if lastStackParen == 'OpParenthesis':
-                                        actState = 'checkIfENDL'
-                                        validLogical = False
-                                        terms = []
-                                    else:
-                                        actState = 'checkIfENDL'
-                            currentL += 1
-                        else:
-                            actState = 'errorIfInvLogic'
-                    else:
-                        actState = 'errorIfInvLogic'
+                    actState = 'checkIfENDL'
+                    groupedStackIfElse.pop()
+                    currentL += 1
                 continue
         
         # If stackBrace
@@ -395,15 +388,20 @@ while True:
 
         # If we got an else
         if actState == 'preCheckElse':
-            if not isWhile:
-                if len(littleBracesGrouped) > 0:
-                    lastIf = littleBracesGrouped[len(littleBracesGrouped) - 1]
-                    if lastIf[0] and lastIf[1]:
-                        littleBracesGrouped.pop()
-                        contLittleBracesClosed -=1
-                        currentL += 1
-                        actState = 'checkElse'
-                        continue
+            if len(littleBracesGrouped) > 0:
+                if littleBracesGrouped[len(littleBracesGrouped) - 1][2] != 'While':
+                # if not isWhile:
+                    if len(littleBracesGrouped) > 0:
+                        lastIf = littleBracesGrouped[len(littleBracesGrouped) - 1]
+                        if lastIf[0] and lastIf[1]:
+                            littleBracesGrouped.pop()
+                            contLittleBracesClosed -=1
+                            currentL += 1
+                            actState = 'checkElse'
+                            continue
+                        else:
+                            actState = 'errorElse'
+                            continue
                     else:
                         actState = 'errorElse'
                         continue
